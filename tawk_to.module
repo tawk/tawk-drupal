@@ -1,0 +1,166 @@
+<?php
+
+/**
+ * @file
+ * @package   Tawk.to module for Drupal
+ * @copyright (C) 2014- Tawk.to
+ * @license   GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ */
+
+
+define('TAWK_TO_WIDGET_PAGE_ID_VARIABLE', 'tawk_to_widget_page_id');
+define('TAWK_TO_WIDGET_WIDGET_ID_VARIABLE', 'tawk_to_widget_widget_id');
+
+require_once 'views/widget.php.inc';
+require_once 'views/admin.php.inc';
+
+/**
+ * Returns help text which is dispalyed in modules page.
+ */
+function tawk_to_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#tawk_to":
+      return '<p>' . t("Tawk.to widget cutomization, using this module you can select widget which will be used on every page on your site") . '</p>';
+  }
+}
+
+/**
+ * Retrieves widget details from database.
+ */
+function tawk_to_get_widget() {
+  return array(
+    'page_id' => variable_get(TAWK_TO_WIDGET_PAGE_ID_VARIABLE, ''),
+    'widget_id' => variable_get(TAWK_TO_WIDGET_WIDGET_ID_VARIABLE, ''),
+  );
+}
+
+/**
+ * Hook for adding widget script to every page.
+ */
+function tawk_to_page_build(&$page) {
+  $widget = tawk_to_get_widget();
+
+  if ($widget['page_id'] === '' || $widget['widget_id'] === '') {
+    return NULL;
+  }
+
+  $page_id = $widget['page_id'];
+  $widget_id = $widget['widget_id'];
+
+  $page['page_bottom']['tawk_to_widget'] = array(
+    '#markup' => tawk_to_render_widget($page_id, $widget_id),
+  );
+
+  return $page;
+}
+
+/**
+ * Hooks up configuration menu items and paths for ajax call endpoints.
+ */
+function tawk_to_menu() {
+
+  $items = array();
+
+  $items['admin/config/tawk'] = array(
+    'title'            => 'tawk.to',
+    'description'      => 'tawk.to configuration',
+    'position'         => 'left',
+    'weight'           => -100,
+    'page callback'    => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file'             => 'system.admin.inc',
+    'file path'        => drupal_get_path('module', 'system'),
+  );
+
+  $items['admin/config/tawk/widget'] = array(
+    'title'            => 'Widget',
+    'description'      => 'Included tawk.to widget configuration',
+    'page callback'    => 'tawk_to_widget_customization',
+    'access arguments' => array('administer site configuration'),
+    'type'             => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/config/tawk/setwidget'] = array(
+    'title'            => 'Set widget',
+    'page callback'    => 'tawk_to_set_widget',
+    'access arguments' => array('administer site configuration'),
+    'type'             => MENU_CALLBACK,
+  );
+
+  $items['admin/config/tawk/removewidget'] = array(
+    'title'            => 'Remove widget',
+    'page callback'    => 'tawk_to_remove_widget',
+    'access arguments' => array('administer site configuration'),
+    'type'             => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Displays widget configuration iframe.
+ *
+ * Configuration iframe contains functionality from
+ * tawk.to server which is responsible for verifying
+ * user login details and also retrieves his page
+ * and widget list and comunicates back to upper
+ * page so that changes can be saved in DB.
+ */
+function tawk_to_widget_customization() {
+  $base_url = tawk_to_get_base_url();
+  $iframe_url = tawk_to_get_iframe_url();
+  return tawk_to_render_widget_iframe($base_url, $iframe_url);
+}
+
+/**
+ * Constructs url for configuration iframe.
+ */
+function tawk_to_get_iframe_url() {
+
+  $widget = tawk_to_get_widget();
+
+  if (!$widget) {
+    $widget = array(
+      'page_id'   => '',
+      'widget_id' => '',
+    );
+  }
+
+  return tawk_to_get_base_url() . '/generic/widgets?currentWidgetId=' . $widget['widget_id'] . '&currentPageId=' . $widget['page_id'];
+}
+
+/**
+ * Base url for tawk.to application which serves iframe.
+ */
+function tawk_to_get_base_url() {
+  return 'https://plugins.tawk.to';
+}
+
+/**
+ * Ajax endpoint which is used to set selected widget details.
+ */
+function tawk_to_set_widget() {
+
+  if (!isset($_POST['pageId']) || !isset($_POST['widgetId'])) {
+    return drupal_json_output(array('success' => FALSE));
+  }
+
+  if (preg_match('/^[0-9A-Fa-f]{24}$/', $_POST['pageId']) !== 1 || preg_match('/^[a-z0-9]{1,50}$/i', $_POST['widgetId']) !== 1) {
+    return drupal_json_output(array('success' => FALSE));
+  }
+
+  variable_set(TAWK_TO_WIDGET_PAGE_ID_VARIABLE, $_POST['pageId']);
+  variable_set(TAWK_TO_WIDGET_WIDGET_ID_VARIABLE, $_POST['widgetId']);
+
+  drupal_json_output(array('success' => TRUE));
+}
+
+/**
+ * Ajax endpoint which is used to remove currently selected widget details.
+ */
+function tawk_to_remove_widget($a = 0, $b = 0) {
+  variable_del(TAWK_TO_WIDGET_WIDGET_ID_VARIABLE);
+  variable_del(TAWK_TO_WIDGET_PAGE_ID_VARIABLE);
+
+  drupal_json_output(array('success' => TRUE));
+}

@@ -1,0 +1,4 @@
+name = Tawk.to
+description = Tawk.to
+core = 7.x
+configure = admin/config/tawk
