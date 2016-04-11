@@ -14,7 +14,7 @@ To answer chat go to https://dashboard.tawk.to
 
  * For a full description of the module, visit the project page:
   https://www.drupal.org/sandbox/tawk/2205433
- * To submit bug reports and feature suggestions, or to track changes please email <a href="support@tawk.to">support@tawk.to</a>
+ * To submit bug reports and feature suggestions, or to track changes please email support@tawk.to
 
 REQUIREMENTS
 ------------
