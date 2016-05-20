@@ -40,7 +40,7 @@ function tawk_to_get_widget() {
 function tawk_to_page_build(&$page) {
   $widget = tawk_to_get_widget();
 
-  if ($widget['page_id'] === '' || $widget['widget_id'] === '') {
+  if ($widget['page_id'] === '' || $widget['widget_id'] === '' || strpos(current_path(), 'admin') !== FALSE) {
     return NULL;
   }
 
