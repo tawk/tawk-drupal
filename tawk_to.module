@@ -44,6 +44,7 @@ function tawk_to_get_widget()
  */
 function tawk_to_page_build(&$page)
 {
+    global $base_url;
     if (path_is_admin(current_path())) {
         return;
     }
@@ -62,9 +63,8 @@ function tawk_to_page_build(&$page)
         $options = json_decode($options);
 
         // prepare visibility
+        $currentUrl = $base_url.$_SERVER["REQUEST_URI"];
         if (false==$options->always_display) {
-            $currentUrl = $base_url.$_SERVER["REQUEST_URI"];
-
             if (drupal_is_front_page()) {
                 if (false==$options->show_onfrontpage) {
                     return;
@@ -87,6 +87,24 @@ function tawk_to_page_build(&$page)
                 }
             }
 
+            if (!$show) {
+                return;
+            }
+        } else {
+            $hide_pages = json_decode($options->hide_oncustom);
+            $show = true;
+            
+            // $currentUrl = urlencode($current_page);
+            $currentUrl = (string) $currentUrl;
+            foreach ($hide_pages as $slug) {
+                $slug = (string) htmlspecialchars($slug); // we need to add htmlspecialchars due to slashes added when saving to database
+                
+                if (stripos($currentUrl, $slug)!==false) {
+                    $show = false;
+                    break;
+                }
+            }
+            
             if (!$show) {
                 return;
             }
@@ -245,6 +263,7 @@ function tawkto_widget_options()
 {
     $jsonOpts = array(
             'always_display' => false,
+            'hide_oncustom' => array(),
             'show_onfrontpage' => false,
             'show_oncategory' => false,
             'show_onproduct' => false,
@@ -256,6 +275,7 @@ function tawkto_widget_options()
         foreach ($options as $post) {
             list($column, $value) = explode('=', $post);
             switch ($column) {
+                case 'hide_oncustom':
                 case 'show_oncustom':
                     // replace newlines and returns with comma, and convert to array for saving
                     $value = urldecode($value);

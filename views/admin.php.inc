@@ -47,6 +47,24 @@ function tawk_to_render_widget_iframe($base_url, $iframe_url, $widget=array(), $
                             </div>
                         </div>
                         <div class="form-group col-lg-12">
+                            <label for="hide_oncustom" class="col-lg-6 control-label">Except on pages:</label>
+                            <div class="col-lg-6 control-label">
+                                <?php if (!empty($display_opts->hide_oncustom)) : ?>
+                                    <?php $whitelist = json_decode($display_opts->hide_oncustom) ?>
+                                    <textarea class="form-control hide_specific" name="hide_oncustom" 
+                                        id="hide_oncustom" cols="30" rows="10"><?php foreach ($whitelist as $page) { echo $page."\r\n"; } ?></textarea>
+                                <?php else : ?>
+                                    <textarea class="form-control hide_specific" name="hide_oncustom" id="hide_oncustom" cols="30" rows="10"></textarea>
+                                <?php endif; ?>
+                                <br>
+                                <p style="text-align: justify;">
+                                Add URLs to pages in which you would like to hide the widget. ( if "always show" is checked )<br>
+                                Put each URL in a new line.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group col-lg-12">
                             <label for="show_onfrontpage" class="col-lg-6 control-label">Show on frontpage</label>
                             <div class="col-lg-6 control-label ">
                                 <?php
@@ -62,6 +80,7 @@ function tawk_to_render_widget_iframe($base_url, $iframe_url, $widget=array(), $
                                     <?php echo ($checked)?'checked':'';?> />
                             </div>
                         </div>
+                        
                         <div class="form-group col-lg-12">
                             <label for="show_oncategory" class="col-lg-6 control-label">Show on category pages</label>
                             <div class="col-lg-6 control-label ">
@@ -161,12 +180,16 @@ function tawk_to_render_widget_iframe($base_url, $iframe_url, $widget=array(), $
     jQuery(document).ready(function() {
         if(jQuery("#always_display").prop("checked")){
             jQuery('.show_specific').prop('disabled', true);
+        } else {
+            jQuery('.hide_specific').prop('disabled', true);
         }
 
         jQuery("#always_display").change(function() {
             if(this.checked){
+                jQuery('.hide_specific').prop('disabled', false);
                 jQuery('.show_specific').prop('disabled', true);
-            }else{
+            } else {
+                jQuery('.hide_specific').prop('disabled', true);
                 jQuery('.show_specific').prop('disabled', false);
             }
         });
