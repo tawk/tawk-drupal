@@ -45,6 +45,8 @@ function tawk_to_get_widget()
 function tawk_to_page_build(&$page)
 {
     global $base_url;
+    
+    // backend checking; do not show chat widget on admin page(s)
     if (path_is_admin(current_path())) {
         return;
     }
@@ -65,19 +67,7 @@ function tawk_to_page_build(&$page)
         // prepare visibility
         $currentUrl = $base_url.$_SERVER["REQUEST_URI"];
         if (false==$options->always_display) {
-            if (drupal_is_front_page()) {
-                if (false==$options->show_onfrontpage) {
-                    return;
-                }                
-            }
-            
-            // taxonomy page
-            if (arg(0) ==  "taxonomy" && arg(1) == "term" && is_numeric(arg(2)) && arg(3) == "") {
-                if (false==$options->show_oncategory) {
-                    return;
-                }
-            }
-            
+
             $showPages = json_decode($options->show_oncustom);
             $show = false;
             foreach ($showPages as $slug) {
@@ -86,27 +76,42 @@ function tawk_to_page_build(&$page)
                     break;
                 }
             }
+            
+            // taxonomy page
+            if (arg(0) ==  "taxonomy" && arg(1) == "term" && is_numeric(arg(2)) && arg(3) == "") {
+                if (false != $options->show_oncategory) {
+                    $show = true;
+                }
+            }
+            
+            if (drupal_is_front_page()) {
+                if (false != $options->show_onfrontpage) {
+                    $show = true;
+                }                
+            }
 
             if (!$show) {
                 return;
             }
         } else {
-            $hide_pages = json_decode($options->hide_oncustom);
-            $show = true;
-            
-            // $currentUrl = urlencode($current_page);
-            $currentUrl = (string) $currentUrl;
-            foreach ($hide_pages as $slug) {
-                $slug = (string) htmlspecialchars($slug); // we need to add htmlspecialchars due to slashes added when saving to database
+            if (isset($options->hide_oncustom)) {
+                $hide_pages = json_decode($options->hide_oncustom);
+                $show = true;
                 
-                if (stripos($currentUrl, $slug)!==false) {
-                    $show = false;
-                    break;
+                // $currentUrl = urlencode($current_page);
+                $currentUrl = (string) $currentUrl;
+                foreach ($hide_pages as $slug) {
+                    $slug = (string) htmlspecialchars($slug); // we need to add htmlspecialchars due to slashes added when saving to database
+                    
+                    if (stripos($currentUrl, $slug)!==false) {
+                        $show = false;
+                        break;
+                    }
                 }
-            }
-            
-            if (!$show) {
-                return;
+                
+                if (!$show) {
+                    return;
+                }
             }
         }
     }

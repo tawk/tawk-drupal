@@ -36,8 +36,9 @@ function tawk_to_render_widget($page_id, $widget_id)
     <?php echo $apiString; ?>
 
     var curpage = window.location.href;
+    var hash = window.location.hash;
     $_Tawk_API.onLoad = function(){
-        if (curpage.indexOf('admin/')!= -1) {
+        if (curpage.indexOf('admin/') != -1 || hash.indexOf('overlay')!= -1) {
             Tawk_API.hideWidget();
         }
     };

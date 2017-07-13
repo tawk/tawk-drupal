@@ -115,7 +115,7 @@ function tawk_to_render_widget_iframe($base_url, $iframe_url, $widget=array(), $
                         </div>
                     </div>
                     <div class="panel-footer" style="position: relative; overflow: hidden; width: 100%; padding: 5px 0;">
-                        <div id="optionsSuccessMessage" style="position:absolute;top:0;left;0;background-color: #dff0d8; color: #3c763d; border-color: #d6e9c6; font-weight: bold; display: none;" class="alert alert-success col-lg-5">Successfully set widget options to your site</div>
+                        <div id="optionsSuccessMessage" style="position:absolute;top:0;left;0;background-color: #dff0d8; color: #3c763d; border-color: #d6e9c6; font-weight: bold;padding: 8px 15px; display: none;" class="alert alert-success col-lg-5">Successfully set widget options to your site</div>
                         <label for="show_oncustom" class="col-lg-6 control-label"></label>
                         <div class="form-group">
                             <button type="submit" value="1" id="module_form_submit_btn" name="submitBlockCategories" class="btn btn-default pull-right"><i class="process-icon-save"></i> Save</button>    
