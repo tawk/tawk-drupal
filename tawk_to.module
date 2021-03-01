@@ -2,8 +2,8 @@
 
 /**
  * @file
- * @package   Tawk.to module for Drupal
- * @copyright (C) 2014- Tawk.to
+ * @package   tawk.to module for Drupal
+ * @copyright (C) 2014-2021 tawk.to
  * @license   GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
@@ -45,12 +45,12 @@ function tawk_to_get_widget()
 function tawk_to_page_build(&$page)
 {
     global $base_url;
-    
+
     // backend checking; do not show chat widget on admin page(s)
     if (path_is_admin(current_path())) {
         return;
     }
-    
+
     $widget = tawk_to_get_widget();
 
     if ($widget['page_id'] === '' || $widget['widget_id'] === '') {
@@ -61,8 +61,15 @@ function tawk_to_page_build(&$page)
 
     // get visibility options
     $options = variable_get(TAWKTO_WIDGET_OPTIONS, '');
+    $markupOptions = array(
+        'enable_visitor_recognition' => true, // default value
+    );
     if ($options) {
         $options = json_decode($options);
+
+        if (isset($options->enable_visitor_recognition)) {
+            $markupOptions['enable_visitor_recognition'] = $options->enable_visitor_recognition;
+        }
 
         // prepare visibility
         $currentUrl = $base_url.$_SERVER["REQUEST_URI"];
@@ -77,18 +84,18 @@ function tawk_to_page_build(&$page)
                     break;
                 }
             }
-            
+
             // taxonomy page
             if (arg(0) ==  "taxonomy" && arg(1) == "term" && is_numeric(arg(2)) && arg(3) == "") {
                 if (false != $options->show_oncategory) {
                     $show = true;
                 }
             }
-            
+
             if (drupal_is_front_page()) {
                 if (false != $options->show_onfrontpage) {
                     $show = true;
-                }                
+                }
             }
 
             if (!$show) {
@@ -98,19 +105,19 @@ function tawk_to_page_build(&$page)
             if (isset($options->hide_oncustom)) {
                 $hide_pages = json_decode($options->hide_oncustom);
                 $show = true;
-                
+
                 // $currentUrl = urlencode($current_page);
                 $currentUrl = (string) $currentUrl;
                 foreach ($hide_pages as $slug) {
                     $slug = (string) htmlspecialchars($slug); // we need to add htmlspecialchars due to slashes added when saving to database
-                    
+
                     // if (stripos($currentUrl, $slug)!==false) {
                     if ($currentUrl == $slug) {
                         $show = false;
                         break;
                     }
                 }
-                
+
                 if (!$show) {
                     return;
                 }
@@ -119,7 +126,7 @@ function tawk_to_page_build(&$page)
     }
 
     $page['page_bottom']['tawkto_widget'] = array(
-            '#markup' => tawk_to_render_widget($page_id, $widget_id),
+            '#markup' => tawk_to_render_widget($page_id, $widget_id, $markupOptions),
         );
 
     return $page;
@@ -196,7 +203,7 @@ function tawkto_widget_customization()
     if (!empty($value) && $user->uid!=$value) {
         $sameUser = false;
     }
-    
+
     $displayOpts = variable_get(TAWKTO_WIDGET_OPTIONS, '');
     if ($displayOpts && !empty($displayOpts)) {
         $displayOpts = json_decode($displayOpts);
@@ -275,6 +282,7 @@ function tawkto_widget_options()
             'show_oncategory' => false,
             'show_onproduct' => false,
             'show_oncustom' => array(),
+            'enable_visitor_recognition' => false
         );
 
     if (isset($_REQUEST['options']) && !empty($_REQUEST['options'])) {
@@ -291,13 +299,13 @@ function tawkto_widget_options()
                     $value = (empty($value)||!$value)?array():$value;
                     $jsonOpts[$column] = json_encode($value);
                     break;
-                
+
                 case 'show_onfrontpage':
                 case 'show_oncategory':
                 case 'show_onproduct':
                 case 'always_display':
-                // default:
-                    $jsonOpts[$column] = ($value==1)?true:false;
+                case 'enable_visitor_recognition':
+                    $jsonOpts[$column] = $value == 1;
                     break;
             }
         }
