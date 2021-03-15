@@ -2,7 +2,7 @@
 /**
  * @file
  * @package   tawk.to module for Drupal
- * @copyright (C) 2014-2021 tawk.to
+ * @copyright (C) 2021 tawk.to
  * @license   GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 

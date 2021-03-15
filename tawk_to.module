@@ -3,7 +3,7 @@
 /**
  * @file
  * @package   tawk.to module for Drupal
- * @copyright (C) 2014-2021 tawk.to
+ * @copyright (C) 2021 tawk.to
  * @license   GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
@@ -126,8 +126,8 @@ function tawk_to_page_build(&$page)
     }
 
     $page['page_bottom']['tawkto_widget'] = array(
-            '#markup' => tawk_to_render_widget($page_id, $widget_id, $markupOptions),
-        );
+        '#markup' => tawk_to_render_widget($page_id, $widget_id, $markupOptions),
+    );
 
     return $page;
 }
