@@ -2,18 +2,18 @@
 /**
  * @file
  * @package   tawk.to module for Drupal
- * @copyright (C) 2014- tawk.to
+ * @copyright (C) 2021 tawk.to
  * @license   GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
 /**
  * Creates markup for embed script element.
  */
-function tawk_to_render_widget($page_id, $widget_id)
+function tawk_to_render_widget($page_id, $widget_id, $options)
 {
     global $user;
     $apiString = '';
-    if ($GLOBALS['user']->uid) {
+    if ($GLOBALS['user']->uid && $options['enable_visitor_recognition']) {
         global $user;
         $apiString = '$_Tawk_API.visitor = {
             name  : "'.$user->name.'",
