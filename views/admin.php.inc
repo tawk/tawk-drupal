@@ -160,7 +160,7 @@ function tawk_to_render_widget_iframe($base_url, $iframe_url, $widget=array(), $
     </div>
     <script type="text/javascript">
         var currentHost = window.location.protocol + "//" + window.location.host;
-        var url = "<?php echo $iframe_url; ?>&parentDomain=" + currentHost;
+        var url = "<?php echo $iframe_url; ?>&platform=drupal7&parentDomain=" + currentHost;
 
         jQuery("#tawkIframe").attr("src", url);
 
