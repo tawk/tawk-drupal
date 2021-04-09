@@ -159,41 +159,44 @@ function tawk_to_render_widget_iframe($base_url, $iframe_url, $widget=array(), $
         </div>
     </div>
     <script type="text/javascript">
-      var currentHost = window.location.protocol + "//" + window.location.host;
-      var url = "<?php echo $iframe_url; ?>&parentDomain=" + currentHost;
+        var currentHost = window.location.protocol + "//" + window.location.host;
+        var url = "<?php echo $iframe_url; ?>&pltf=drupal&pltfv=7&parentDomain=" + currentHost;
 
-      jQuery("#tawkIframe").attr("src", url);
+        jQuery("#tawkIframe").attr("src", url);
 
-      var iframe = jQuery("#tawk_widget_customization")[0];
+        var iframe = jQuery("#tawk_widget_customization")[0];
 
-      window.addEventListener("message", function(e) {
-          if(e.origin === "<?php echo $base_url; ?>") {
+        window.addEventListener("message", function(e) {
+            if(e.origin === "<?php echo $base_url; ?>") {
+                if(e.data.action === "setWidget") {
+                    setWidget(e);
+                }
 
-              if(e.data.action === "setWidget") {
-                  setWidget(e);
-              }
+                if(e.data.action === "removeWidget") {
+                    removeWidget(e);
+                }
 
-              if(e.data.action === "removeWidget") {
-                  removeWidget(e);
-              }
-          }
-      });
-
-      function setWidget(e) {
-            jQuery.post("/admin/config/tawk/setwidget", {
-              pageId : e.data.pageId,
-              widgetId : e.data.widgetId
-            }, function(r) {
-                if(r.success) {
-                $('input[name="page_id"]').val(e.data.pageId);
-                $('input[name="widget_id"]').val(e.data.widgetId);
-                $('#widget_already_set').hide();
-                e.source.postMessage({action: "setDone"}, "<?php echo $base_url; ?>");
-            } else {
-                e.source.postMessage({action: "setFail"}, "<?php echo $base_url; ?>");
+                if(e.data.action === 'reloadHeight') {
+                    reloadIframeHeight(e.data.height);
+                }
             }
-          });
-      }
+        });
+
+        function setWidget(e) {
+            jQuery.post("/admin/config/tawk/setwidget", {
+                pageId : e.data.pageId,
+                widgetId : e.data.widgetId
+                }, function(r) {
+                    if(r.success) {
+                    $('input[name="page_id"]').val(e.data.pageId);
+                    $('input[name="widget_id"]').val(e.data.widgetId);
+                    $('#widget_already_set').hide();
+                    e.source.postMessage({action: "setDone"}, "<?php echo $base_url; ?>");
+                } else {
+                    e.source.postMessage({action: "setFail"}, "<?php echo $base_url; ?>");
+                }
+            });
+        }
 
         function removeWidget(e) {
             jQuery.post("/admin/config/tawk/removewidget", function(r) {
@@ -208,42 +211,55 @@ function tawk_to_render_widget_iframe($base_url, $iframe_url, $widget=array(), $
             });
         }
 
-    jQuery(document).ready(function() {
-        if(jQuery("#always_display").prop("checked")){
-            jQuery('.show_specific').prop('disabled', true);
-        } else {
-            jQuery('.hide_specific').prop('disabled', true);
+        function reloadIframeHeight(height) {
+            if (!height) {
+                return;
+            }
+
+            var iframe = jQuery('#tawkIframe');
+            if (height === iframe.height()) {
+                return;
+            }
+
+            iframe.height(height);
         }
 
-        jQuery("#always_display").change(function() {
-            if(this.checked){
-                jQuery('.hide_specific').prop('disabled', false);
+        jQuery(document).ready(function() {
+            if(jQuery("#always_display").prop("checked")){
                 jQuery('.show_specific').prop('disabled', true);
             } else {
                 jQuery('.hide_specific').prop('disabled', true);
-                jQuery('.show_specific').prop('disabled', false);
             }
-        });
 
-        // process the form
-        jQuery('#module_form').submit(function(event) {
-            $path = "/admin/config/tawk/setoptions";
-            jQuery.post($path, {
-                action     : 'set_visibility',
-                ajax       : true,
-                page_id    : jQuery('input[name="page_id"]').val(),
-                widget_id  : jQuery('input[name="widget_id"]').val(),
-                options    : jQuery(this).serialize()
-            }, function(r) {
-                if(r.success) {
-                    $('#optionsSuccessMessage').toggle().delay(3000).fadeOut();
+            jQuery("#always_display").change(function() {
+                if(this.checked){
+                    jQuery('.hide_specific').prop('disabled', false);
+                    jQuery('.show_specific').prop('disabled', true);
+                } else {
+                    jQuery('.hide_specific').prop('disabled', true);
+                    jQuery('.show_specific').prop('disabled', false);
                 }
             });
 
-            // stop the form from submitting the normal way and refreshing the page
-            event.preventDefault();
+            // process the form
+            jQuery('#module_form').submit(function(event) {
+                $path = "/admin/config/tawk/setoptions";
+                jQuery.post($path, {
+                    action     : 'set_visibility',
+                    ajax       : true,
+                    page_id    : jQuery('input[name="page_id"]').val(),
+                    widget_id  : jQuery('input[name="widget_id"]').val(),
+                    options    : jQuery(this).serialize()
+                }, function(r) {
+                    if(r.success) {
+                        $('#optionsSuccessMessage').toggle().delay(3000).fadeOut();
+                    }
+                });
+
+                // stop the form from submitting the normal way and refreshing the page
+                event.preventDefault();
+            });
         });
-    });
     </script>
     <?php
     $markup = ob_get_contents();
