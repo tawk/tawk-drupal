@@ -13,23 +13,21 @@ Don't have a tawk.to account yet? [Create one here.](https://www.tawk.to/?utm_so
 
 ## Installation
 
-### Requirements
-- Download the module [here](https://www.drupal.org/project/tawktodrupal7).
-
 ### Module Installer
-1. Log in to the your administration panel and go to `Modules`.
-2. In the modules page, click on `Install new module`.
-3. Click on `Choose File`, select the downloaded module, and click on the `Install` button.
-4. After installation completes, click on `Enable newly added modules` link and it'll redirect you back to the `Modules` page.
-5. In the modules page, search for `tawk.to` and enable the module by checking the `Enabled` checkbox.
-6. Lastly, click on `Save Configuration` button to finalize the enabled modules.
+1. Download the [plugin module](https://www.drupal.org/project/tawktodrupal7).
+2. Log in to the your administration panel and go to `Modules`.
+3. In the modules page, click on `Install new module`.
+4. Click on `Choose File`, select the downloaded module, and click on the `Install` button.
+5. After installation completes, click on `Enable newly added modules` link and it'll redirect you back to the `Modules` page.
+6. In the modules page, search for `tawk.to` and enable the module by checking the `Enabled` checkbox.
+7. Lastly, click on `Save Configuration` button to complete the installation.
 
 ### Manual Installation
-1. Extract the contents of the downloaded module.
+1. Download the [plugin module](https://www.drupal.org/project/tawktodrupal7) and extract the contents of the downloaded module.
 2. In the extracted files, copy the contents of the `tawktodrupal7` directory to `<DRUPAL_INSTALLATION>/modules/tawkto` directory.
 2. Log in to the your administration panel and go to `Modules`.
 3. In the modules page, search for `tawk.to` and enable the module by checking the `Enabled` checkbox.
-4. Lastly, click on `Save Configuration` button to finalze the enabled modules.
+4. Lastly, click on `Save Configuration` button to complete the installation.
 
 ### Configuration
 1. In the administration panel, go to `Modules`.
