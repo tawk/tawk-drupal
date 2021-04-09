@@ -13,26 +13,29 @@ Don't have a tawk.to account yet? [Create one here.](https://www.tawk.to/?utm_so
 
 ## Installation
 
+### Requirements
+- Download the module [here](https://www.drupal.org/project/tawktodrupal7).
+
 ### Module Installer
-1. Log in to the Drupal 7 administration panel and click on Modules.
-2. In the module listing page, click on `Install new module`.
-3. Click `Choose File` and select the downloaded zip file. Then click `Install`.
-4. After installation is complete, click on `Enable newly added modules`.
-5. In the modules list, click on the Enabled checkbox for the tawk.to module.
-6. Click on `Save Configuration`.
+1. Log in to the your administration panel and go to `Modules`.
+2. In the modules page, click on `Install new module`.
+3. Click on `Choose File`, select the downloaded module, and click on the `Install` button.
+4. After installation completes, click on `Enable newly added modules` link and it'll redirect you back to the `Modules` page.
+5. In the modules page, search for `tawk.to` and enable the module by checking the `Enabled` checkbox.
+6. Lastly, click on `Save Configuration` button to finalize the enabled modules.
 
 ### Manual Installation
-1. Download the module [here](https://www.drupal.org/project/tawktodrupal7).
-2. Extract and copy the `tawkto` directory to the `<DRUPAL_INSTALLATION>/modules/` directory.
-3. Log in to the Drupal 7 administration panel and click on Modules.
-4. Search for `tawk.to` and click on the `Enabled` checkbox.
-5. Click on `Save Configuration`.
+1. Extract the contents of the downloaded module.
+2. In the extracted files, copy the contents of the `tawktodrupal7` directory to `<DRUPAL_INSTALLATION>/modules/tawkto` directory.
+2. Log in to the your administration panel and go to `Modules`.
+3. In the modules page, search for `tawk.to` and enable the module by checking the `Enabled` checkbox.
+4. Lastly, click on `Save Configuration` button to finalze the enabled modules.
 
 ### Configuration
-1. In the admin panel, go to Modules.
-2. In the module listing, click on the Configure link for the tawk.to module.
-3. Click the Widget link in the resulting page to see available widgets.
-4. After logging into your tawk.to account, you will be able to select a widget for display.
+1. In the administration panel, go to `Modules`.
+2. In the modules page, search for `tawk.to` and click on the `Configure` link to go to the configuration page.
+3. Click on the `Widget` link to navigate to the widget configuration page.
+4. Log in to your tawk.to account and you will be able to select which widget to display.
 
 ## Frequently Asked Questions
 Visit our [Help Center](https://help.tawk.to) for answers to FAQs.
