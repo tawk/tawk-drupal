@@ -10,11 +10,8 @@ Docker containers for Drupal 7
 - install docker-compose [http://docs.docker.com/compose/install/](http://docs.docker.com/compose/install/)
 
 ## Usage
-Start the container:
-- ```docker-compose up```
-
-Start the container in detach mode:
-- ```docker-compose up -d```
+Build and Start the container:
+- ```./build.sh```
 
 Stop the container:
 - ```docker-compose stop```
