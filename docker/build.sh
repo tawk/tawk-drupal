@@ -10,7 +10,7 @@ if [ -d "$module_dir" ]; then
 fi
 
 echo "Creating module folder";
-mkdir $module_dir;
+mkdir -p $module_dir;
 
 echo "Copying files to module folder";
 cp $build_dir/../tawk_to.* $module_dir
@@ -20,6 +20,3 @@ echo "Done building module folder";
 
 echo "Building docker image"
 docker-compose build
-
-echo "Starting docker containers"
-docker-compose up -d
