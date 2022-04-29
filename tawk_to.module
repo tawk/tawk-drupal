@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * @package   tawk.to module for Drupal
@@ -7,310 +6,208 @@
  * @license   GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-
-define('TAWKTO_WIDGET_PAGE_ID', 'tawkto_widget_page_id');
-define('TAWKTO_WIDGET_WIDGET_ID', 'tawkto_widget_widget_id');
-define('TAWKTO_WIDGET_OPTIONS', 'tawkto_widget_options');
-define('TAWKTO_WIDGET_USER_ID', 'tawkto_widget_user_id');
-
-require_once 'views/widget.php.inc';
-require_once 'views/admin.php.inc';
+require_once 'tawk_to.admin.inc';
+require_once 'includes/tawk_to.helper.php';
 
 /**
- * Returns help text which is dispalyed in modules page.
- */
-function tawk_to_help($path, $arg)
-{
-    switch ($path) {
-        case "admin/help#tawk_to":
-            return '<p>' . t("Tawk.to widget cutomization, using this module you can select widget which will be used on every page on your site") . '</p>';
-        break;
+* Implements hook_preprocess_page().
+* Ensures widget appears on all defined pages
+*/
+function tawk_to_preprocess_page(&$variables) {
+  global $user;
+  $base_url = TawkHelper::get_base_url();
+
+  // backend checking; do not show chat widget on admin page(s)
+  if (path_is_admin(current_path())) {
+    return;
+  }
+
+  $widget = TawkHelper::get_widget();
+
+  if ($widget['page_id'] === '' || $widget['widget_id'] === '') {
+    return null;
+  }
+
+  $page_id = $widget['page_id'];
+  $widget_id = $widget['widget_id'];
+
+  // get visibility options
+  $options = variable_get(TawkHelper::TAWK_TO_WIDGET_OPTIONS, '');
+
+  // initial markup options
+  $enable_visitor_recognition = true; // default value
+
+  if ($options) {
+    $options = json_decode($options);
+
+    if (isset($options->enable_visitor_recognition)) {
+      $enable_visitor_recognition = $options->enable_visitor_recognition;
     }
-}
 
-/**
- * Retrieves widget details from database.
- */
-function tawk_to_get_widget()
-{
-    return array(
-            'page_id' => variable_get(TAWKTO_WIDGET_PAGE_ID, ''),
-            'widget_id' => variable_get(TAWKTO_WIDGET_WIDGET_ID, ''),
-        );
-}
+    // prepare visibility
+    $currentUrl = $base_url.$_SERVER['REQUEST_URI'];
 
-/**
- * Hook for adding widget script to every page.
- */
-function tawk_to_page_build(&$page)
-{
-    global $base_url;
+    if (false==$options->always_display) {
+      $showPages = json_decode($options->show_oncustom);
+      $show = false;
 
-    // backend checking; do not show chat widget on admin page(s)
-    if (path_is_admin(current_path())) {
+      foreach ($showPages as $slug) {
+        if ($currentUrl == $base_url.$slug) {
+          $show = true;
+          break;
+        }
+      }
+
+      // taxonomy term pages
+      if (arg(0) ==  'taxonomy' && arg(1) == 'term' && is_numeric(arg(2)) && arg(3) == '') {
+        if (false != $options->show_ontaxonomy) {
+          $show = true;
+        }
+      }
+
+      // front page
+      if (drupal_is_front_page()) {
+        if (false != $options->show_onfrontpage) {
+          $show = true;
+        }
+      }
+
+      if (!$show) {
         return;
+      }
     }
+    else {
+      if (isset($options->hide_oncustom)) {
+        $hide_pages = json_decode($options->hide_oncustom);
+        $show = true;
 
-    $widget = tawk_to_get_widget();
+        $currentUrl = (string) $currentUrl;
+        foreach ($hide_pages as $slug) {
+          // we need to add htmlspecialchars due to slashes added when saving to database
+          $slug = (string) htmlspecialchars($slug);
 
-    if ($widget['page_id'] === '' || $widget['widget_id'] === '') {
-        return null;
-    }
-    $page_id = $widget['page_id'];
-    $widget_id = $widget['widget_id'];
-
-    // get visibility options
-    $options = variable_get(TAWKTO_WIDGET_OPTIONS, '');
-    $markupOptions = array(
-        'enable_visitor_recognition' => true, // default value
-    );
-    if ($options) {
-        $options = json_decode($options);
-
-        if (isset($options->enable_visitor_recognition)) {
-            $markupOptions['enable_visitor_recognition'] = $options->enable_visitor_recognition;
-        }
-
-        // prepare visibility
-        $currentUrl = $base_url.$_SERVER["REQUEST_URI"];
-        if (false==$options->always_display) {
-
-            $showPages = json_decode($options->show_oncustom);
+          if ($currentUrl == $base_url.$slug) {
             $show = false;
-            foreach ($showPages as $slug) {
-                // if (stripos($currentUrl, $slug)!==false) {
-                if ($currentUrl == $slug) {
-                    $show = true;
-                    break;
-                }
-            }
-
-            // taxonomy page
-            if (arg(0) ==  "taxonomy" && arg(1) == "term" && is_numeric(arg(2)) && arg(3) == "") {
-                if (false != $options->show_oncategory) {
-                    $show = true;
-                }
-            }
-
-            if (drupal_is_front_page()) {
-                if (false != $options->show_onfrontpage) {
-                    $show = true;
-                }
-            }
-
-            if (!$show) {
-                return;
-            }
-        } else {
-            if (isset($options->hide_oncustom)) {
-                $hide_pages = json_decode($options->hide_oncustom);
-                $show = true;
-
-                // $currentUrl = urlencode($current_page);
-                $currentUrl = (string) $currentUrl;
-                foreach ($hide_pages as $slug) {
-                    $slug = (string) htmlspecialchars($slug); // we need to add htmlspecialchars due to slashes added when saving to database
-
-                    // if (stripos($currentUrl, $slug)!==false) {
-                    if ($currentUrl == $slug) {
-                        $show = false;
-                        break;
-                    }
-                }
-
-                if (!$show) {
-                    return;
-                }
-            }
+            break;
+          }
         }
+
+        if (!$show) {
+          return;
+        }
+      }
     }
+  }
 
-    $page['page_bottom']['tawkto_widget'] = array(
-        '#markup' => tawk_to_render_widget($page_id, $widget_id, $markupOptions),
+  $widget_options = array(
+    'pageId' => $page_id,
+    'widgetId' => $widget_id,
+    'enableVisitorRecognition' => $enable_visitor_recognition,
+  );
+
+  if ($user->uid && $enable_visitor_recognition) {
+    $widget_options['user'] = array(
+      'name' => $user->name,
+      'email' => $user->mail,
     );
+  }
 
-    return $page;
+  drupal_add_js(TawkHelper::get_module_path() . '/js/tawk_to.widget.js', 'file');
+  drupal_add_js(array(
+    'tawkto' => $widget_options,
+  ), 'setting');
+
+  return $variables;
 }
 
 /**
- * Hooks up configuration menu items and paths for ajax call endpoints.
- */
-function tawk_to_menu()
-{
-
+* Hooks up configuration menu items and paths for ajax call endpoints.
+*/
+function tawk_to_menu() {
   $items = array();
   $items['admin/config/tawk'] = array(
-        'title'            => 'tawk.to',
-        'description'      => 'tawk.to configuration',
-        'position'         => 'left',
-        'weight'           => -100,
-        'page callback'    => 'system_admin_menu_block_page',
-        'access arguments' => array('administer site configuration'),
-        'file'             => 'system.admin.inc',
-        'file path'        => drupal_get_path('module', 'system'),
-      );
+    'title'            => 'tawk.to',
+    'description'      => 'tawk.to configuration',
+    'position'         => 'left',
+    'weight'           => -100,
+    'page callback'    => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+    'file'             => 'system.admin.inc',
+    'file path'        => drupal_get_path('module', 'system'),
+  );
 
   $items['admin/config/tawk/widget'] = array(
-        'title'            => 'Widget',
-        'description'      => 'Included tawk.to widget configuration',
-        'page callback'    => 'tawkto_widget_customization',
-        'access arguments' => array('administer site configuration'),
-        'type'             => MENU_NORMAL_ITEM,
-      );
+    'title'            => 'Widget',
+    'description'      => 'Included tawk.to widget configuration',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('tawk_to_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'type'             => MENU_NORMAL_ITEM,
+  );
 
   $items['admin/config/tawk/setwidget'] = array(
-        'title'            => 'Set widget',
-        'page callback'    => 'tawk_to_set_widget',
-        'access arguments' => array('administer site configuration'),
-        'type'             => MENU_CALLBACK,
-      );
+    'title'            => 'Set widget',
+    'page callback'    => 'tawk_to_set_widget',
+    'access arguments' => array('administer site configuration'),
+    'type'             => MENU_CALLBACK,
+  );
 
   $items['admin/config/tawk/removewidget'] = array(
-        'title'            => 'Remove widget',
-        'page callback'    => 'tawk_to_remove_widget',
-        'access arguments' => array('administer site configuration'),
-        'type'             => MENU_CALLBACK,
-      );
-
-  $items['admin/config/tawk/setoptions'] = array(
-        'title'            => 'Set widget options',
-        'page callback'    => 'tawkto_widget_options',
-        'access arguments' => array('administer site configuration'),
-        'type'             => MENU_CALLBACK,
-      );
+    'title'            => 'Remove widget',
+    'page callback'    => 'tawk_to_remove_widget',
+    'access arguments' => array('administer site configuration'),
+    'type'             => MENU_CALLBACK,
+  );
 
   return $items;
 }
 
 /**
- * Displays widget configuration iframe.
- *
- * Configuration iframe contains functionality from
- * tawk.to server which is responsible for verifying
- * user login details and also retrieves his page
- * and widget list and comunicates back to upper
- * page so that changes can be saved in DB.
- */
-function tawkto_widget_customization()
-{
-    $base_url = tawk_to_get_base_url();
-    $iframe_url = tawk_to_get_iframe_url();
-    $widget = tawk_to_get_widget();
+* Ajax endpoint which is used to set selected widget details.
+*/
+function tawk_to_set_widget() {
+  if (!isset($_POST['pageId']) || !isset($_POST['widgetId'])) {
+    return drupal_json_output(array('success' => false));
+  }
 
-    global $user;
-    $sameUser = true;
-    $value = variable_get(TAWKTO_WIDGET_USER_ID, '');
-    if (!empty($value) && $user->uid!=$value) {
-        $sameUser = false;
-    }
+  if (preg_match('/^[0-9A-Fa-f]{24}$/', $_POST['pageId']) !== 1 || preg_match('/^[a-z0-9]{1,50}$/i', $_POST['widgetId']) !== 1) {
+    return drupal_json_output(array('success' => false));
+  }
 
-    $displayOpts = variable_get(TAWKTO_WIDGET_OPTIONS, '');
-    if ($displayOpts && !empty($displayOpts)) {
-        $displayOpts = json_decode($displayOpts);
-    } else {
-        $displayOpts = null;
-    }
+  variable_set(TawkHelper::TAWK_TO_PAGE_ID, $_POST['pageId']);
+  variable_set(TawkHelper::TAWK_TO_WIDGET_ID, $_POST['widgetId']);
 
-    return tawk_to_render_widget_iframe($base_url, $iframe_url, $widget, $displayOpts, $sameUser);
+  global $user;
+  if ($user->uid) {
+    variable_set(TawkHelper::TAWK_TO_WIDGET_USER_ID, $user->uid);
+  }
+
+  // Flush page cache so widget will appear at next page load
+  cache_clear_all(NULL, 'cache_page');
+
+  drupal_json_output(array('success' => true));
 }
 
 /**
- * Constructs url for configuration iframe.
- */
-function tawk_to_get_iframe_url()
-{
-    $widget = tawk_to_get_widget();
-    if (!$widget) {
-        $widget = array(
-                'page_id'   => '',
-                'widget_id' => '',
-            );
-    }
-    return tawk_to_get_base_url() . '/generic/widgets?currentWidgetId=' . $widget['widget_id'] . '&currentPageId=' . $widget['page_id'];
+* Ajax endpoint which is used to remove currently selected widget details.
+*/
+function tawk_to_remove_widget() {
+  variable_del(TawkHelper::TAWK_TO_PAGE_ID);
+  variable_del(TawkHelper::TAWK_TO_WIDGET_ID);
+
+  // Flush page cache so widget will disappear at next page load
+  cache_clear_all(NULL, 'cache_page');
+
+  drupal_json_output(array('success' => true));
 }
 
 /**
- * Base url for tawk.to application which serves iframe.
- */
-function tawk_to_get_base_url()
-{
-    return 'https://plugins.tawk.to';
-}
-
-/**
- * Ajax endpoint which is used to set selected widget details.
- */
-function tawk_to_set_widget()
-{
-
-    if (!isset($_POST['pageId']) || !isset($_POST['widgetId'])) {
-        return drupal_json_output(array('success' => false));
-    }
-
-    if (preg_match('/^[0-9A-Fa-f]{24}$/', $_POST['pageId']) !== 1 || preg_match('/^[a-z0-9]{1,50}$/i', $_POST['widgetId']) !== 1) {
-        return drupal_json_output(array('success' => false));
-    }
-
-    variable_set(TAWKTO_WIDGET_PAGE_ID, $_POST['pageId']);
-    variable_set(TAWKTO_WIDGET_WIDGET_ID, $_POST['widgetId']);
-
-    global $user;
-    if ($user->uid) {
-        variable_set(TAWKTO_WIDGET_USER_ID, $user->uid);
-    }
-
-    drupal_json_output(array('success' => true));
-}
-
-/**
- * Ajax endpoint which is used to remove currently selected widget details.
- */
-function tawk_to_remove_widget($a = 0, $b = 0)
-{
-    variable_del(TAWKTO_WIDGET_PAGE_ID);
-    variable_del(TAWKTO_WIDGET_WIDGET_ID);
-
-    drupal_json_output(array('success' => true));
-}
-
-function tawkto_widget_options()
-{
-    $jsonOpts = array(
-            'always_display' => false,
-            'hide_oncustom' => array(),
-            'show_onfrontpage' => false,
-            'show_oncategory' => false,
-            'show_onproduct' => false,
-            'show_oncustom' => array(),
-            'enable_visitor_recognition' => false
-        );
-
-    if (isset($_REQUEST['options']) && !empty($_REQUEST['options'])) {
-        $options = explode('&', $_REQUEST['options']);
-        foreach ($options as $post) {
-            list($column, $value) = explode('=', $post);
-            switch ($column) {
-                case 'hide_oncustom':
-                case 'show_oncustom':
-                    // replace newlines and returns with comma, and convert to array for saving
-                    $value = urldecode($value);
-                    $value = str_ireplace(["\r\n", "\r", "\n"], ',', $value);
-                    $value = explode(",", $value);
-                    $value = (empty($value)||!$value)?array():$value;
-                    $jsonOpts[$column] = json_encode($value);
-                    break;
-
-                case 'show_onfrontpage':
-                case 'show_oncategory':
-                case 'show_onproduct':
-                case 'always_display':
-                case 'enable_visitor_recognition':
-                    $jsonOpts[$column] = $value == 1;
-                    break;
-            }
-        }
-    }
-    variable_set(TAWKTO_WIDGET_OPTIONS, json_encode($jsonOpts));
-
-    drupal_json_output(array('success' => true));
+* Implements hook_config_info().
+*/
+function tawk_to_config_info() {
+  $prefixes[TawkHelper::TAWK_TO_CONFIG_NAME] = array(
+    'label' => t('tawk.to'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
 }

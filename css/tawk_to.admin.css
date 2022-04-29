@@ -1,0 +1,24 @@
+/**
+ * @file
+ * Removes styling from html in admin.inc.php
+ *
+ * @package   tawk.to module for Drupal CMS
+ * @copyright (C) 2021 tawk.to
+ * @license   GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ */
+
+/**
+ * Notification
+ * Initially hide the status message. Jquery is used to show after updating settings
+ */
+.success-message-container {
+  display: none;
+}
+
+/* iframe */
+.tawkto-property-widget-selection {
+  min-height: 275px;
+  width: 100%;
+  border: none;
+  margin: 5px 0;
+}
