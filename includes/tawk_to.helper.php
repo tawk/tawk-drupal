@@ -7,20 +7,18 @@
  */
 
 class TawkHelper {
-  const TAWK_TO_PAGE_ID = 'page_id';
-  const TAWK_TO_WIDGET_ID = 'widget_id';
-  const TAWK_TO_WIDGET_OPTIONS = 'widget_options';
-  const TAWK_TO_WIDGET_USER_ID = 'widget_user_id';
-  const TAWK_TO_CONFIG_NAME = 'tawk_to.settings';
+  const TAWK_TO_PAGE_ID = 'tawkto_widget_page_id';
+  const TAWK_TO_WIDGET_ID = 'tawkto_widget_widget_id';
+  const TAWK_TO_WIDGET_OPTIONS = 'tawkto_widget_widget_options';
+  const TAWK_TO_WIDGET_USER_ID = 'tawkto_widget_widget_user_id';
 
   /**
    * Gets the selected property and widget id
    */
   public static function get_widget() {
-    $config_name = TawkHelper::TAWK_TO_CONFIG_NAME;
     return array(
-      'page_id' => variable_get($config_name, TawkHelper::TAWK_TO_PAGE_ID),
-      'widget_id' => variable_get($config_name,TawkHelper::TAWK_TO_WIDGET_ID),
+      'page_id' => variable_get(TawkHelper::TAWK_TO_PAGE_ID, ''),
+      'widget_id' => variable_get(TawkHelper::TAWK_TO_WIDGET_ID, ''),
     );
   }
 
@@ -28,10 +26,7 @@ class TawkHelper {
    * Checks if the current user is the same user that selected the widget
    */
   public static function check_same_user($current_user) {
-    $saved_user = variable_get(
-      TawkHelper::TAWK_TO_CONFIG_NAME,
-      TawkHelper::TAWK_TO_WIDGET_USER_ID
-    );
+    $saved_user = variable_get(TawkHelper::TAWK_TO_WIDGET_USER_ID, '');
 
     if (empty($saved_user)) {
       return false;

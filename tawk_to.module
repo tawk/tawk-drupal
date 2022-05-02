@@ -112,10 +112,10 @@ function tawk_to_preprocess_page(&$variables) {
     );
   }
 
-  drupal_add_js(TawkHelper::get_module_path() . '/js/tawk_to.widget.js', 'file');
   drupal_add_js(array(
     'tawkto' => $widget_options,
   ), 'setting');
+  drupal_add_js(TawkHelper::get_module_path() . '/js/tawk_to.widget.js', 'file');
 
   return $variables;
 }
@@ -199,15 +199,4 @@ function tawk_to_remove_widget() {
   cache_clear_all(NULL, 'cache_page');
 
   drupal_json_output(array('success' => true));
-}
-
-/**
-* Implements hook_config_info().
-*/
-function tawk_to_config_info() {
-  $prefixes[TawkHelper::TAWK_TO_CONFIG_NAME] = array(
-    'label' => t('tawk.to'),
-    'group' => t('Configuration'),
-  );
-  return $prefixes;
 }
