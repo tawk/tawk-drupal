@@ -1,0 +1,68 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "d4af42901445724f19e91af2ad94628a",
+    "packages": [
+        {
+            "name": "tawk/url-utils",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tawk/tawk-url-utils.git",
+                "reference": "73c166333707d893b0160fa9b5eae7aa8fbfa03c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tawk/tawk-url-utils/zipball/73c166333707d893b0160fa9b5eae7aa8fbfa03c",
+                "reference": "73c166333707d893b0160fa9b5eae7aa8fbfa03c",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tawk\\": "lib",
+                    "Tawk\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "post-install-cmd": [
+                    "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility)"
+                ],
+                "post-update-cmd": [
+                    "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility)"
+                ],
+                "test": [
+                    "phpunit"
+                ],
+                "lint": [
+                    "phpcs -p -s -v --runtime-set ignore_warnings_on_exit true ."
+                ],
+                "lint:fix": [
+                    "phpcbf -p -s -v .; err=$?; if [ $err -eq 1 ]; then exit 0; else exit $err; fi;"
+                ]
+            },
+            "support": {
+                "source": "https://github.com/tawk/tawk-url-utils/tree/2.0.1",
+                "issues": "https://github.com/tawk/tawk-url-utils/issues"
+            },
+            "time": "2022-01-28T11:14:45+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}

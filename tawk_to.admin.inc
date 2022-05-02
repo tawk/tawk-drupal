@@ -122,8 +122,39 @@ function build_visibility_opts_form($display_opts) {
   $form['hide_oncustom'] = array(
     '#type' => 'textarea',
     '#title' => t('Except on pages:'),
-    '#description' => t('Add URLs to pages in which you would like to hide the widget.<br>
-    Put each URL in a new line and just include the leading \'/\' and page URL (e.g. /about)'),
+    '#description' => t('
+      Add URLs to pages in which you would like to hide the widget.<br>
+      Put each URL in a new line and just include the leading \'/\' and page URL (e.g. /about)
+      <br>
+      <div class="tooltip">
+        Examples of accepted path patterns
+        <ul class="tooltiptext">
+          <li>*</li>
+          <li>*/to/somewhere</li>
+          <li>/*/to/somewhere</li>
+          <li>/path/*/somewhere</li>
+          <li>/path/*/lead/*/somewhere</li>
+          <li>/path/*/*/somewhere</li>
+          <li>/path/to/*</li>
+          <li>/path/to/*/</li>
+          <li>*/to/*/page</li>
+          <li>/*/to/*/page</li>
+          <li>/path/*/other/*</li>
+          <li>/path/*/other/*/</li>
+          <li>http://www.example.com/</li>
+          <li>http://www.example.com/*</li>
+          <li>http://www.example.com/*/to/somewhere</li>
+          <li>http://www.example.com/path/*/somewhere</li>
+          <li>http://www.example.com/path/*/lead/*/somewhere</li>
+          <li>http://www.example.com/path/*/*/somewhere</li>
+          <li>http://www.example.com/path/to/*</li>
+          <li>http://www.example.com/path/to/*/</li>
+          <li>http://www.example.com/*/to/*/page</li>
+          <li>http://www.example.com/path/*/other/*</li>
+          <li>http://www.example.com/path/*/other/*/</li>
+        </ul>
+      </div>
+    '),
     '#prefix' => '<div class="div_hide_specific">',
     '#suffix' => '</div>',
     '#id' => t('hide_oncustom'),
@@ -170,8 +201,39 @@ function build_visibility_opts_form($display_opts) {
   $form['show_oncustom'] = array(
     '#type' => 'textarea',
     '#title' => t('Show on pages:'),
-    '#description' => t('Add URLs to pages in which you would like to show the widget.<br>
-    Put each URL in a new line and just include the the leading \'/\' and page URL (e.g. /about)'),
+    '#description' => t('
+      Add URLs to pages in which you would like to show the widget.<br>
+      Put each URL in a new line and just include the the leading \'/\' and page URL
+      <br>
+      <div class="tooltip">
+        Examples of accepted path patterns
+        <ul class="tooltiptext">
+          <li>*</li>
+          <li>*/to/somewhere</li>
+          <li>/*/to/somewhere</li>
+          <li>/path/*/somewhere</li>
+          <li>/path/*/lead/*/somewhere</li>
+          <li>/path/*/*/somewhere</li>
+          <li>/path/to/*</li>
+          <li>/path/to/*/</li>
+          <li>*/to/*/page</li>
+          <li>/*/to/*/page</li>
+          <li>/path/*/other/*</li>
+          <li>/path/*/other/*/</li>
+          <li>http://www.example.com/</li>
+          <li>http://www.example.com/*</li>
+          <li>http://www.example.com/*/to/somewhere</li>
+          <li>http://www.example.com/path/*/somewhere</li>
+          <li>http://www.example.com/path/*/lead/*/somewhere</li>
+          <li>http://www.example.com/path/*/*/somewhere</li>
+          <li>http://www.example.com/path/to/*</li>
+          <li>http://www.example.com/path/to/*/</li>
+          <li>http://www.example.com/*/to/*/page</li>
+          <li>http://www.example.com/path/*/other/*</li>
+          <li>http://www.example.com/path/*/other/*/</li>
+        </ul>
+      </div>
+    '),
     '#prefix' => '<div class="div_show_specific">',
     '#suffix' => '</div>',
     '#id' => t('show_oncustom'),

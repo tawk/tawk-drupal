@@ -6,8 +6,11 @@
  * @license   GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-require_once 'tawk_to.admin.inc';
-require_once 'includes/tawk_to.helper.php';
+require_once __DIR__ . '/tawk_to.admin.inc';
+require_once __DIR__ . '/includes/tawk_to.helper.php';
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Tawk\Modules\UrlPatternMatcher;
 
 /**
 * Implements hook_preprocess_page().
@@ -51,11 +54,9 @@ function tawk_to_preprocess_page(&$variables) {
       $showPages = json_decode($options->show_oncustom);
       $show = false;
 
-      foreach ($showPages as $slug) {
-        if ($currentUrl == $base_url.$slug) {
-          $show = true;
-          break;
-        }
+
+      if (UrlPatternMatcher::match($currentUrl, $showPages)) {
+        $show = true;
       }
 
       // taxonomy term pages
@@ -82,14 +83,9 @@ function tawk_to_preprocess_page(&$variables) {
         $show = true;
 
         $currentUrl = (string) $currentUrl;
-        foreach ($hide_pages as $slug) {
-          // we need to add htmlspecialchars due to slashes added when saving to database
-          $slug = (string) htmlspecialchars($slug);
 
-          if ($currentUrl == $base_url.$slug) {
-            $show = false;
-            break;
-          }
+        if (UrlPatternMatcher::match($currentUrl, $hide_pages)) {
+          $show = false;
         }
 
         if (!$show) {
