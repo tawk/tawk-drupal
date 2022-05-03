@@ -9,8 +9,8 @@
 class TawkHelper {
   const TAWK_TO_PAGE_ID = 'tawkto_widget_page_id';
   const TAWK_TO_WIDGET_ID = 'tawkto_widget_widget_id';
-  const TAWK_TO_WIDGET_OPTIONS = 'tawkto_widget_widget_options';
-  const TAWK_TO_WIDGET_USER_ID = 'tawkto_widget_widget_user_id';
+  const TAWK_TO_WIDGET_OPTIONS = 'tawkto_widget_options';
+  const TAWK_TO_WIDGET_USER_ID = 'tawkto_widget_user_id';
 
   /**
    * Gets the selected property and widget id

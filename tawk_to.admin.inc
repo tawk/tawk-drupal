@@ -123,7 +123,7 @@ function build_visibility_opts_form($display_opts) {
     '#type' => 'textarea',
     '#title' => t('Except on pages:'),
     '#description' => t('Add URLs to pages in which you would like to hide the widget.<br>
-    Put each URL in a new line and just include the leading \'/\' and page URL (e.g. /about)'),
+    Put each URL in a new line'),
     '#prefix' => '<div class="div_hide_specific">',
     '#suffix' => '</div>',
     '#id' => t('hide_oncustom'),
@@ -146,20 +146,20 @@ function build_visibility_opts_form($display_opts) {
     '#attributes' => $show_onfrontpage_attr,
   );
 
-  // show on taxonomy config
-  $show_ontaxonomy_attr = array();
-  if (!is_null($display_opts) && $display_opts->show_ontaxonomy) {
-    $show_ontaxonomy_attr['checked'] = true;
+  // show on category config
+  $show_oncategory_attr = array();
+  if (!is_null($display_opts) && $display_opts->show_oncategory) {
+    $show_oncategory_attr['checked'] = true;
   }
 
-  $form['show_ontaxonomy'] = array(
+  $form['show_oncategory'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Show on taxonomy pages'),
-    '#description' => t('Select to show on pages for taxonomy terms'),
+    '#title' => t('Show on category pages'),
+    '#description' => t('Select to show on pages for category terms'),
     '#prefix' => '<div class="div_show_specific">',
     '#suffix' => '</div>',
-    '#id' => t('show_ontaxonomy'),
-    '#attributes' => $show_ontaxonomy_attr,
+    '#id' => t('show_oncategory'),
+    '#attributes' => $show_oncategory_attr,
   );
 
   // include urls config
@@ -171,7 +171,7 @@ function build_visibility_opts_form($display_opts) {
     '#type' => 'textarea',
     '#title' => t('Show on pages:'),
     '#description' => t('Add URLs to pages in which you would like to show the widget.<br>
-    Put each URL in a new line and just include the the leading \'/\' and page URL (e.g. /about)'),
+    Put each URL in a new line'),
     '#prefix' => '<div class="div_show_specific">',
     '#suffix' => '</div>',
     '#id' => t('show_oncustom'),
@@ -194,7 +194,7 @@ function build_privacy_settings_form($display_opts) {
 
   // enable visitor recognition config
   $enable_visitor_recognition_attr = array();
-  if (!is_null($display_opts) && $display_opts->enable_visitor_recognition) {
+  if (!is_null($display_opts) && isset($display_opts->enable_visitor_recognition) && $display_opts->enable_visitor_recognition) {
     $enable_visitor_recognition_attr['checked'] = true;
   }
   $form['enable_visitor_recognition'] = array(
@@ -216,7 +216,7 @@ function tawk_to_admin_form_submit($form, &$form_state) {
     'always_display' => false,
     'hide_oncustom' => array(),
     'show_onfrontpage' => false,
-    'show_ontaxonomy' => false,
+    'show_oncategory' => false,
     'show_oncustom' => array(),
     'enable_visitor_recognition' => false,
   );
@@ -234,7 +234,7 @@ function tawk_to_admin_form_submit($form, &$form_state) {
         $jsonOpts[$column] = json_encode($value);
         break;
       case 'show_onfrontpage':
-      case 'show_ontaxonomy':
+      case 'show_oncategory':
       case 'always_display':
       case 'enable_visitor_recognition':
         $jsonOpts[$column] = $value == 1;

@@ -11,23 +11,23 @@ jQuery(document).ready(function() {
 
   jQuery("#tawkIframe").attr("src", url);
 
-  if (jQuery("#always_display").prop("checked")) {
-    jQuery('.show_specific').prop('disabled', true);
+  if (jQuery("#always_display").attr('checked')) {
+    jQuery('.show_specific').attr('disabled', true);
     jQuery(".div_show_specific").hide();
   } else {
-    jQuery('.hide_specific').prop('disabled', true);
+    jQuery('.hide_specific').attr('disabled', true);
     jQuery(".div_hide_specific").hide();
   }
 
   jQuery("#always_display").change(function() {
     if (this.checked) {
-      jQuery('.hide_specific').prop('disabled', false);
-      jQuery('.show_specific').prop('disabled', true);
+      jQuery('.hide_specific').attr('disabled', false);
+      jQuery('.show_specific').attr('disabled', true);
       jQuery(".div_hide_specific").show();
       jQuery(".div_show_specific").hide();
     } else {
-      jQuery('.hide_specific').prop('disabled', true);
-      jQuery('.show_specific').prop('disabled', false);
+      jQuery('.hide_specific').attr('disabled', true);
+      jQuery('.show_specific').attr('disabled', false);
       jQuery(".div_hide_specific").hide();
       jQuery(".div_show_specific").show();
     }
