@@ -30,7 +30,7 @@ jobs:
         run: echo "::set-output name=version::$(jq -r '.version' ./composer.json)"
 
       - name: build artifact
-        run: composer run package && mv ./tmp/tawkto.zip tawkto.zip
+        run: composer run package && mv ./tmp/tawktodrupal7.zip tawktodrupal7.zip
 
       - name: upload artifact
         uses: actions/upload-release-asset@v1
@@ -38,6 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./tawkto.zip
-          asset_name: tawkto.zip
+          asset_path: ./tawktodrupal7.zip
+          asset_name: tawktodrupal7.zip
           asset_content_type: application/zip

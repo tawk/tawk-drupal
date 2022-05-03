@@ -14,7 +14,7 @@
     },
     "scripts": {
         "build:prod": "composer install --no-dev",
-        "package": "composer run clean && mkdir -p ./tmp/tawkto && cp -r ./css ./tmp/tawkto && cp -r ./includes ./tmp/tawkto && cp -r ./js ./tmp/tawkto && cp -r ./vendor ./tmp/tawkto && cp ./tawk_to.* ./tmp/tawkto && cp README.md ./tmp/tawkto && (cd ./tmp && zip -9 -rq ./tawkto.zip ./tawkto)",
+        "package": "composer run clean && mkdir -p ./tmp/tawktodrupal7 && cp -r ./css ./tmp/tawktodrupal7 && cp -r ./includes ./tmp/tawktodrupal7 && cp -r ./js ./tmp/tawktodrupal7 && cp -r ./vendor ./tmp/tawktodrupal7 && cp ./tawk_to.* ./tmp/tawktodrupal7 && cp README.md ./tmp/tawktodrupal7 && (cd ./tmp && zip -9 -rq ./tawktodrupal7.zip ./tawktodrupal7)",
         "clean": "rm -rf ./tmp"
     }
 }

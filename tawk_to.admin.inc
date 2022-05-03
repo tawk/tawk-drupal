@@ -123,8 +123,8 @@ function build_visibility_opts_form($display_opts) {
     '#type' => 'textarea',
     '#title' => t('Except on pages:'),
     '#description' => t('
-      Add URLs to pages in which you would like to hide the widget.<br>
-      Put each URL in a new line and just include the leading \'/\' and page URL (e.g. /about)
+      Add URLs/paths to pages in which you would like to hide the widget.<br>
+      Put each URL/path in a new line. Paths should have a leading \'/\'.
       <br>
       <div class="tooltip">
         Examples of accepted path patterns
@@ -202,8 +202,8 @@ function build_visibility_opts_form($display_opts) {
     '#type' => 'textarea',
     '#title' => t('Show on pages:'),
     '#description' => t('
-      Add URLs to pages in which you would like to show the widget.<br>
-      Put each URL in a new line and just include the the leading \'/\' and page URL
+      Add URLs/paths to pages in which you would like to hide the widget.<br>
+      Put each URL/path in a new line. Paths should have a leading \'/\'.
       <br>
       <div class="tooltip">
         Examples of accepted path patterns
