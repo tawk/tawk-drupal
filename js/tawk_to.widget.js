@@ -16,7 +16,7 @@ jQuery(document).ready(function() {
   var curpage = window.location.href;
   var hash = window.location.hash;
   window.Tawk_API.onLoad = function() {
-    if (curpage.indexOf('admin/') !== -1 || hash.indexOf('overlay')!== -1) {
+    if (curpage.indexOf('admin/') !== -1 || hash.indexOf('overlay') !== -1) {
       window.Tawk_API.hideWidget();
     }
   };
