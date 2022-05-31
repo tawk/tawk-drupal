@@ -45,14 +45,14 @@ function tawk_to_preprocess_page(&$variables) {
     }
 
     // prepare visibility
-    $currentUrl = $base_url.$_SERVER['REQUEST_URI'];
+    $current_url = $base_url.$_SERVER['REQUEST_URI'];
 
     if (false === $options->always_display) {
-      $showPages = json_decode($options->show_oncustom);
+      $show_pages = json_decode($options->show_oncustom);
       $show = false;
 
-      foreach ($showPages as $slug) {
-        if ($currentUrl === $slug) {
+      foreach ($show_pages as $slug) {
+        if ($current_url === $slug) {
           $show = true;
           break;
         }
@@ -79,12 +79,12 @@ function tawk_to_preprocess_page(&$variables) {
         $hide_pages = json_decode($options->hide_oncustom);
         $show = true;
 
-        $currentUrl = (string) $currentUrl;
+        $current_url = (string) $current_url;
         foreach ($hide_pages as $slug) {
           // we need to add htmlspecialchars due to slashes added when saving to database
           $slug = (string) htmlspecialchars($slug);
 
-          if ($currentUrl === $slug) {
+          if ($current_url === $slug) {
             $show = false;
             break;
           }

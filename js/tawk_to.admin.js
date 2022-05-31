@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
   tawktoSettings = Drupal.settings.tawkto || {};
 
   var currentHost = window.location.protocol + "//" + window.location.host;
-  var url = tawktoSettings.iframeUrl + "&pltf=drupal&parentDomain=" + currentHost;
+  var url = tawktoSettings.iframeUrl + "&parentDomain=" + currentHost;
 
   jQuery("#tawkIframe").attr("src", url);
 
