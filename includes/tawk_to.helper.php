@@ -54,7 +54,7 @@ class TawkHelper {
         'widget_id' => '',
       );
     }
-    return TawkHelper::get_base_url() . '/generic/widgets?currentWidgetId=' . $widget['widget_id'] . '&currentPageId=' . $widget['page_id'];
+    return TawkHelper::get_base_url() . '/generic/widgets?currentWidgetId=' . $widget['widget_id'] . '&currentPageId=' . $widget['page_id'] . '&pltf=drupal';
   }
 
   /**
