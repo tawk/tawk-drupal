@@ -12,9 +12,12 @@ services:
       MYSQL_PASSWORD: drupal
 
   drupal:
+    build:
+      context: .
+      args:
+        DRUPAL_IMAGE_VERSION: 7-apache
     depends_on:
       - db
-    image: drupal:7-apache
     ports:
       - 8000:80
     volumes:
