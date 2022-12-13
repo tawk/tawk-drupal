@@ -1,0 +1,20 @@
+{
+    "name": "tawk/tawk-drupal",
+    "description": "tawk.to Live Chat module for Drupal 7 CMS",
+    "type": "project",
+    "license": "GPLv3",
+    "require": {
+        "tawk/url-utils": "2.0.1"
+    },
+    "repositories": {
+        "tawk-url-utils": {
+            "type": "vcs",
+            "url": "https://github.com/tawk/tawk-url-utils.git"
+        }
+    },
+    "scripts": {
+        "build:prod": "composer install --no-dev",
+        "package": "composer run clean && mkdir -p ./tmp/tawktodrupal7 && cp -r ./css ./tmp/tawktodrupal7 && cp -r ./includes ./tmp/tawktodrupal7 && cp -r ./js ./tmp/tawktodrupal7 && cp -r ./vendor ./tmp/tawktodrupal7 && cp ./tawk_to.* ./tmp/tawktodrupal7 && cp README.md ./tmp/tawktodrupal7 && (cd ./tmp && zip -9 -rq ./tawktodrupal7.zip ./tawktodrupal7)",
+        "clean": "rm -rf ./tmp"
+    }
+}
