@@ -12,9 +12,15 @@ fi
 echo "Creating module folder";
 mkdir -p $module_dir;
 
+echo "Installing dependency"
+composer run build:prod --working-dir=$build_dir/..
+
 echo "Copying files to module folder";
 cp $build_dir/../tawk_to.* $module_dir
-cp -r $build_dir/../views $module_dir
+cp -r $build_dir/../css $module_dir
+cp -r $build_dir/../js $module_dir
+cp -r $build_dir/../includes $module_dir
+cp -r $build_dir/../vendor $module_dir
 
 echo "Done building module folder";
 
