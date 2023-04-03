@@ -14,7 +14,7 @@ Don't have a tawk.to account yet? [Create one here.](https://www.tawk.to/?utm_so
 ## Installation
 
 ### Module Installer
-1. Download the [plugin module](https://www.drupal.org/project/tawktodrupal7).
+1. Download the `tawktodrupal7.zip` from [latest release.](https://github.com/tawk/tawk-drupal/releases).
 2. Log in to the your administration panel and go to `Modules`.
 3. In the modules page, click on `Install new module`.
 4. Click on `Choose File`, select the downloaded module, and click on the `Install` button.
@@ -23,7 +23,7 @@ Don't have a tawk.to account yet? [Create one here.](https://www.tawk.to/?utm_so
 7. Lastly, click on `Save Configuration` button to complete the installation.
 
 ### Manual Installation
-1. Download the [plugin module](https://www.drupal.org/project/tawktodrupal7) and extract the contents.
+1. Download the `tawktodrupal7.zip` from [latest release.](https://github.com/tawk/tawk-drupal/releases).
 2. In the extracted files, copy the contents of the `tawktodrupal7` directory to `<DRUPAL_INSTALLATION>/modules/tawkto` directory.
 2. Log in to the your administration panel and go to `Modules`.
 3. In the modules page, search for `tawk.to` and enable the module by checking the `Enabled` checkbox.

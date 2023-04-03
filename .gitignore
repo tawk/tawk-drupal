@@ -1,1 +1,4 @@
 docker/bin
+/vendor/
+/dev
+/tmp
