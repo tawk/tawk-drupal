@@ -292,8 +292,13 @@ function tawk_to_admin_form_submit($form, &$form_state) {
         // replace newlines and returns with comma, and convert to array for saving
         $value = str_replace(["\r\n", "\r", "\n"], ',', $value);
         $value = explode(',', $value);
-        $value = (empty($value)||!$value)?array():$value;
-        $jsonOpts[$column] = json_encode($value);
+        $non_empty_values = array();
+        foreach ($value as $str) {
+          if ($str !== '') {
+            $non_empty_values[] = $str;
+          }
+        }
+        $jsonOpts[$column] = json_encode($non_empty_values);
         break;
       case 'show_onfrontpage':
       case 'show_oncategory':
