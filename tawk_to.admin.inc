@@ -289,13 +289,14 @@ function tawk_to_admin_form_submit($form, &$form_state) {
     switch ($column) {
       case 'hide_oncustom':
       case 'show_oncustom':
-        // replace newlines and returns with comma, and convert to array for saving
-        $value = str_replace(["\r\n", "\r", "\n"], ',', $value);
-        $value = explode(',', $value);
+        // split by newlines, then remove empty lines
+        $value = str_replace("\r", "\n", $value);
+        $value = explode("\n", $value);
         $non_empty_values = array();
         foreach ($value as $str) {
-          if ($str !== '') {
-            $non_empty_values[] = $str;
+          $trimmed = trim($str);
+          if ($trimmed !== '') {
+            $non_empty_values[] = $trimmed;
           }
         }
         $jsonOpts[$column] = json_encode($non_empty_values);
