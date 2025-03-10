@@ -2,6 +2,10 @@
 
 Free live chat widget for your site
 
+***
+**This module will no longer receive updates due to [EOL of Drupal 7](https://www.drupal.org/about/drupal-7/d7eol/partners). It is highly recommended to migrate your site to Drupal 8 or later and use the [tawk.to Drupal 8 module](https://www.drupal.org/project/tawkto) instead.**
+***
+
 ## Description
 The tawk.to Drupal module allows you to easily choose which one of your tawk.to widgets you want to use on your drupal page. To create an account, please visit https://tawk.to
 
